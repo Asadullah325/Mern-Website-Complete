@@ -3,8 +3,20 @@ const validate = (schema) => async (req, res, next) => {
         const parseBody = await schema.parseAsync(req.body);
         req.body = parseBody;
         next();
-    } catch (error) {
-        res.status(400).json({ message: error.errors[0].message || error.message });
+    } catch (err) {
+
+        console.log(err);
+
+        const status = err.errors[0].status || 400;
+        const message = err.errors[0].message || "Validation error";
+        const stack = err.errors[0].path || "";
+
+        const error = {
+            status,
+            message,
+            stack
+        }
+        next(error);
     }
 }
 

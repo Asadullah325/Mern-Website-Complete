@@ -5,8 +5,6 @@ const validate = (schema) => async (req, res, next) => {
         next();
     } catch (err) {
 
-        console.log(err);
-
         const status = err.errors[0].status || 400;
         const message = err.errors[0].message || "Validation error";
         const stack = err.errors[0].path || "";

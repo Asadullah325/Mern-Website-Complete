@@ -4,6 +4,7 @@ import authRouter from "./routes/auth.router.js";
 import contactRouter from "./routes/contact.router.js";
 import connectDB from "./config/database.config.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
+import cors from "cors";
 const app = express();
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRouter);
 app.use("/api/form", contactRouter);
+app.use(cors());
 
 
 app.use(errorMiddleware)

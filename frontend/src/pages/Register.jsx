@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -18,18 +19,45 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log(user);
+
     // Simple validation
     if (!user.name || !user.email || !user.password || !user.phone) {
       alert("All fields are required!");
       return;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
+      const response = await fetch("http://localhost:3000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (!response.ok) {
+        throw new Error("Registration failed!");
+      }
+
+      const data = await response.json();
+
+      console.log(data);
+
+      setTimeout(() => {
+        toast.success("Registration successful!");
+        setUser({
+          name: "",
+          email: "",
+          password: "",
+          phone: "",
+        })
+        setLoading(false); // Ensure loading is set to false after success
+      }, 2000);
     } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong!");
-    } finally {
-      setLoading(false);
+      toast.error(error.message || "Something went wrong!");
+      setLoading(false); // Ensure loading is set to false even in case of an error
     }
   };
 

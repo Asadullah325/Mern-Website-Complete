@@ -1,18 +1,21 @@
-const express = require("express");
+import express from "express";
+import dotenv from "dotenv";
+import authRouter from "./routes/auth.router.js";
+import connectDB from "./config/database.config.js";
 const app = express();
-const dotenv = require("dotenv");
-
 dotenv.config();
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
-})
 
-app.get("/test", (req, res) => {
-    res.send("Test route");
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/api/auth", authRouter);
+
+
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+
+connectDB().then(
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    })
+)
